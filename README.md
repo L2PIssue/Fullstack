@@ -4,3 +4,5 @@ Exercises for course 'Full Stack Web Development' at University of Helsinki spri
 [Part 0](https://github.com/L2PIssue/Fullstack/tree/master/part_0)
 
 [Part 1](https://github.com/L2PIssue/Fullstack/tree/master/part_1)
+
+[Part 2](https://github.com/L2PIssue/Fullstack/tree/master/part_2)
