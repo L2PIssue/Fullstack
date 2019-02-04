@@ -10,14 +10,14 @@ const Header = (props) => {
 }
 
 const Total = (props) => {
-  let sum = 0
-  props.parts.map((part) =>
-    sum = sum + part.exercises
-  );
+  const total = props.parts.reduce( (s, p) => {
+    console.log({exercises: s.exercises+p.exercises})
+    return {exercises: s.exercises+p.exercises}
+  })
   return (
     <div>
       <p>
-        yhteensä {sum} tehtävää
+        yhteensä {total.exercises} tehtävää
       </p>
     </div>
   )
