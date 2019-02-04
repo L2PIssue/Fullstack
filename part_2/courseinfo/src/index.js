@@ -24,7 +24,7 @@ const Total = (props) => {
 
 const Parts = (props) => {
   const listParts = props.parts.map((part) =>
-    <li>{part.name} {part.exercises}</li>
+    <li key={part.id} >{part.name} {part.exercises}</li>
   );
   return (
     <div>
@@ -37,7 +37,7 @@ const Parts = (props) => {
 
 const Courses = (props) => {
   const listCourses = props.courses.map((course) =>
-    <div>
+    <div key={course.id}>
       <Header course={course.name}/>
       <Parts parts={course.parts}/>
       <Total parts={course.parts}/>
@@ -54,6 +54,7 @@ const App = () => {
   const courses = [
     {
       name: 'Half Stack -sovelluskehitys',
+      id: 1,
       parts: [
         {
           name: 'Reactin perusteet',
@@ -74,6 +75,7 @@ const App = () => {
     },
     {
       name: 'Uusi kurssi',
+      id: 2,
       parts: [
         {
           name: 'Osa 1',
