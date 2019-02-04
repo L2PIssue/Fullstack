@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom';
 import './index.css';
 import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import personService from './services/persons'
 
 const Title = () => {
   return (
@@ -9,10 +9,39 @@ const Title = () => {
   );
 }
 
+const Message = (props) => {
+  if (props.message === null) {
+    return null
+  }
+  return (
+    <div className='message'>
+      {props.message}
+    </div>
+  );
+}
+
+const ErrorMessage = (props) => {
+  if (props.message === null) {
+    return null
+  }
+  return (
+    <div className='error'>
+      {props.message}
+    </div>
+  );
+}
+
 const People = (props) => {
+  const handleDelete = (event) => {
+    console.log(event.target.value)
+    personService
+      .deleteOne(event.target.value)
+  }
+
   const personList = props.persons.map((person) =>
     <li key={person.name}>
-      {person.name} {person.number}
+      {person.name} {person.number} 
+      <button value={person.id} onClick={handleDelete}>poista</button>
     </li>
   );
   return (
@@ -28,15 +57,17 @@ const App = () => {
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setNewSearch ] = useState('')
+  const [ message, setMessage ] = useState(null)
+  const [ errorMessage, setErrorMessage ] = useState(null)
   
-  useEffect(() => {
-    console.log('effect')
-    axios.get('http://localhost:3003/persons').then(response => {
-      console.log('promise fulfilled')
-      setPersons(response.data)
-    })
+  const help = useEffect(() => {
+    personService
+      .getAll()
+      .then(response => {
+        setPersons(response.data)
+      })
   }, [])
-  
+
   const handleSearch = (event) => {   
     setNewSearch(event.target.value)
   }
@@ -52,13 +83,28 @@ const App = () => {
   const addNew = (event) => {
     event.preventDefault()
     if (persons.some(e => e.name === newName)) {
-      alert('${newName} on jo luettelossa')
+      setErrorMessage(          
+        newName + ' on jo luettelossa'        
+      )        
+      setTimeout(() => {          
+        setErrorMessage(null)        
+      }, 5000)
     } else {
       const personObject = {
         name: newName,
         number: newNumber
       }
-      setPersons(persons.concat(personObject))
+      personService
+        .create(personObject)
+        .then(response => {
+          setPersons(persons.concat(personObject))
+        })
+      setMessage(
+        newName + ' lisätty'
+      ) 
+      setTimeout(() => {          
+        setMessage(null)        
+      }, 5000)
     }
     setNewName('')
   }
@@ -66,6 +112,8 @@ const App = () => {
   return (
     <div>
       <Title />
+      <Message message={message} />
+      <ErrorMessage message={errorMessage} />
         Etsi:
         <input 
             value={search}
