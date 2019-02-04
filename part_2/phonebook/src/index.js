@@ -1,6 +1,7 @@
 import ReactDOM from 'react-dom';
 import './index.css';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import axios from 'axios'
 
 const Title = () => {
   return (
@@ -23,14 +24,18 @@ const People = (props) => {
 }
 
 const App = () => {
-  const [ persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '050-1234567' },
-    { name: 'Arto Wikla', number: '050-1234568' },
-    { name: 'Matti Hellas', number: '050-1234569' }
-  ]) 
+  const [ persons, setPersons] = useState([])
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
   const [ search, setNewSearch ] = useState('')
+  
+  useEffect(() => {
+    console.log('effect')
+    axios.get('http://localhost:3003/persons').then(response => {
+      console.log('promise fulfilled')
+      setPersons(response.data)
+    })
+  }, [])
   
   const handleSearch = (event) => {   
     setNewSearch(event.target.value)
